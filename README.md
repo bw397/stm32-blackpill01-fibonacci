@@ -40,3 +40,7 @@ Multi-digit 7-segment displays work by very quickly and continuously cycling thr
 STM32CubeIDE uses comments in code to separate user code from code that it automatically generates.
 
 Your code must be between `/* USER CODE BEGIN ... */` and `/* USER CODE END ... */` sections.
+
+## Demo
+
+![Image of breadboard with black pill and lcd display](demo.jpg)
