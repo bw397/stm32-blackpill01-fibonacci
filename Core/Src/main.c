@@ -265,56 +265,56 @@ static void MX_GPIO_Init(void)
 
 
 void Write_Digit(int place, int digit) {
-	int segment_index[] = {
-		GPIO_PIN_0,
-		GPIO_PIN_1,
-		GPIO_PIN_2,
-		GPIO_PIN_3,
-		GPIO_PIN_4,
-		GPIO_PIN_5,
-		GPIO_PIN_6,
-		GPIO_PIN_7,
-		GPIO_PIN_8,
-		GPIO_PIN_9
-	};
+    int segment_index[] = {
+        GPIO_PIN_0,
+        GPIO_PIN_1,
+        GPIO_PIN_2,
+        GPIO_PIN_3,
+        GPIO_PIN_4,
+        GPIO_PIN_5,
+        GPIO_PIN_6,
+        GPIO_PIN_7,
+        GPIO_PIN_8,
+        GPIO_PIN_9
+    };
 
-	int place_index[] = {GPIO_PIN_1, GPIO_PIN_2, GPIO_PIN_3, GPIO_PIN_4};  // A1 to A4
+    int place_index[] = {GPIO_PIN_1, GPIO_PIN_2, GPIO_PIN_3, GPIO_PIN_4};  // A1 to A4
 
-	// select no digits first, so we can setup the segments and avoid bleed
-	for (int p = 0; p < 4; p++)
-		HAL_GPIO_WritePin(GPIOA, place_index[p], 0);
+    // select no digits first, so we can setup the segments and avoid bleed
+    for (int p = 0; p < 4; p++)
+        HAL_GPIO_WritePin(GPIOA, place_index[p], 0);
 
-	int segment[10][7] = {
-		{ 1, 1, 1, 1, 1, 1, 0 },  // 0
-		{ 0, 1, 1, 0, 0, 0, 0 },  // 1
-		{ 1, 1, 0, 1, 1, 0, 1 },  // 2
-		{ 1, 1, 1, 1, 0, 0, 1 },  // 3
-		{ 0, 1, 1, 0, 0, 1, 1 },  // 4
-		{ 1, 0, 1, 1, 0, 1, 1 },  // 5
-		{ 1, 0, 1, 1, 1, 1, 1 },  // 6
-		{ 1, 1, 1, 0, 0, 0, 0 },  // 7
-		{ 1, 1, 1, 1, 1, 1, 1 },  // 8
-		{ 1, 1, 1, 0, 0, 1, 1 }   // 9
-	};
+    int segment[10][7] = {
+        { 1, 1, 1, 1, 1, 1, 0 },  // 0
+        { 0, 1, 1, 0, 0, 0, 0 },  // 1
+        { 1, 1, 0, 1, 1, 0, 1 },  // 2
+        { 1, 1, 1, 1, 0, 0, 1 },  // 3
+        { 0, 1, 1, 0, 0, 1, 1 },  // 4
+        { 1, 0, 1, 1, 0, 1, 1 },  // 5
+        { 1, 0, 1, 1, 1, 1, 1 },  // 6
+        { 1, 1, 1, 0, 0, 0, 0 },  // 7
+        { 1, 1, 1, 1, 1, 1, 1 },  // 8
+        { 1, 1, 1, 0, 0, 1, 1 }   // 9
+    };
 
-	for (int s = 0; s < 10; s++) {
-		HAL_GPIO_WritePin(GPIOB, segment_index[s], !segment[digit][s]);
-	}
+    for (int s = 0; s < 10; s++) {
+        HAL_GPIO_WritePin(GPIOB, segment_index[s], !segment[digit][s]);
+    }
 
-	// select digit for writing
-	HAL_GPIO_WritePin(GPIOA, place_index[place], 1);
+    // select digit for writing
+    HAL_GPIO_WritePin(GPIOA, place_index[place], 1);
 
-	HAL_Delay(2);  // 10 is too much, 4 works, 6 flickers, 5 tiny flicker
+    HAL_Delay(2);  // 10 is too much, 4 works, 6 flickers, 5 tiny flicker
 }
 
 void LED_Show(int x) {
-	for (double d = 0; d < 4; d++) {
-		double pp = pow(10, d);
+    for (double d = 0; d < 4; d++) {
+        double pp = pow(10, d);
 
-		int digit = (x / (int)(pp)) % 10;
+        int digit = (x / (int)(pp)) % 10;
 
-		Write_Digit(3 - d, digit);
-	}
+        Write_Digit(3 - d, digit);
+    }
 }
 
 
@@ -330,18 +330,18 @@ void LED_Show(int x) {
 void StartDefaultTask(void *argument)
 {
   /* USER CODE BEGIN 5 */
-	/* Infinite loop */
-  	HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
+    /* Infinite loop */
+    HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
 
-	for(;;)	{
-		if (cur_value > 9999) {
-			// reset
-			prev_value = 1;
-			cur_value = 0;
-		}
-		LED_Show(cur_value);
-		osDelay(1);  // required to cede control so that other tasks may run (2 works)
-	}
+    for(;;) {
+        if (cur_value > 9999) {
+            // reset
+            prev_value = 1;
+            cur_value = 0;
+        }
+        LED_Show(cur_value);
+        osDelay(1);  // required to cede control so that other tasks may run (2 works)
+    }
   /* USER CODE END 5 */
 }
 
@@ -357,24 +357,24 @@ void StartReadKey(void *argument)
   /* USER CODE BEGIN StartReadKey */
   /* Infinite loop */
   for(;;) {
-	HAL_Delay(100);  // 10 too short. 200 too long (100 works)
+    HAL_Delay(100);  // 10 too short. 200 too long (100 works)
 
-  	int result = HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0);
-  	if (result == 0) {  // 0 == pressed
-  	  	HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);  // blue LED shows for length of switch actuation
+    int result = HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0);
+    if (result == 0) {  // 0 == pressed
+        HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);  // blue LED shows for length of switch actuation
 
-  	    // make the change immediately (fibonacci)
-  		int remember = cur_value;
-  		cur_value = cur_value + prev_value;
-  		prev_value = remember;
+        // make the change immediately (fibonacci)
+        int remember = cur_value;
+        cur_value = cur_value + prev_value;
+        prev_value = remember;
 
-  		while (result == 0) {  // but don't make the change again until next key press - debounce code
-  		  	result = HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0);
-			HAL_Delay(50);
-  		}
+        while (result == 0) {  // but don't make the change again until next key press - debounce code
+            result = HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0);
+            HAL_Delay(50);
+        }
 
-  	  	HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
-  	}
+        HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
+    }
   }
   /* USER CODE END StartReadKey */
 }
